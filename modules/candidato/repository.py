@@ -1,4 +1,4 @@
-from core.db import DataBase
+from core.db import Database
 from modules.candidato.shemas import CriarCandidatoSchema, AtualizarCandidatoSchema
 
 class CandidatoRepository:
@@ -46,7 +46,7 @@ class CandidatoRepository:
 
     def criar(self, candidato: CriarCandidatoSchema):
         parametros = (candidato.nome, candidato.partido, candidato.cargo)
-        db = DataBase()
+        db = Database()
         return db.execute(self.QUERY_CRIAR_CANDIDATO, parametros)
 
     def listar(self, nome: str | None, partido: str | None, cargo: str | None, ativo: bool | None):
@@ -60,12 +60,12 @@ class CandidatoRepository:
             ativo, ativo
         )
         
-        db = DataBase()
+        db = Database()
         return db.execute(self.QUERY_LISTAR_CANDIDATOS, parametros)
 
     def listar_por_id(self, candidato_id: int):
         parametros = (candidato_id,)
-        db = DataBase()
+        db = Database()
         return db.execute(self.QUERY_BUSCAR_CANDIDATO_POR_ID, parametros, many=False)
 
     def atualizar(self, candidato_id: int, candidato: AtualizarCandidatoSchema):
@@ -75,10 +75,10 @@ class CandidatoRepository:
             candidato.cargo, 
             candidato_id
         )
-        db = DataBase()
+        db = Database()
         return db.execute(self.QUERY_ATUALIZAR_CANDIDATO, parametros, many=False)
 
     def desativar(self, candidato_id: int):
         parametros = (candidato_id,)
-        db = DataBase()
+        db = Database()
         return db.execute(self.QUERY_DESATIVAR_CANDIDATO, parametros, many=False)

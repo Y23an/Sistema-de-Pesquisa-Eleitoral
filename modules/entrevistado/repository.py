@@ -1,5 +1,5 @@
 from modules.entrevistado.schemas import CriarEntrevistadoSchema, AtualizarEntrevistadoSchema
-from core.db import DataBase
+from core.db import Database
 
 class EntrevistadoRepository:
     QUERY_CRIAR_ENTREVISTADO = """
@@ -45,7 +45,7 @@ class EntrevistadoRepository:
 
     def criar(self, entrevistado: CriarEntrevistadoSchema):
         parametros = (entrevistado.nome, entrevistado.idade, entrevistado.genero, entrevistado.cidade)
-        db = DataBase()
+        db = Database()
         return db.execute(self.QUERY_CRIAR_ENTREVISTADO, parametros)
 
     def listar(self, nome: str | None, idade: int | None, genero: str | None, cidade: str | None, ativo: bool | None):
@@ -54,12 +54,12 @@ class EntrevistadoRepository:
         cidade_like = f"%{cidade}%" if cidade else None
         parametros = (nome, nome_like, idade, idade, genero, genero_like,cidade, cidade, ativo, ativo)
         
-        db = DataBase()
+        db = Database()
         return db.execute(self.QUERY_LISTAR_ENTREVISTADOS, parametros)
     
     def listar_por_id(self, entrevistado_id: int):
         parametros = (entrevistado_id,)
-        db = DataBase()
+        db = Database()
         return db.execute(self.QUERY_BUSCAR_ENTREVISTADO_POR_ID, parametros, many=False)
     
     def atualizar(self, entrevistado_id: int, entrevistado: AtualizarEntrevistadoSchema):
@@ -70,10 +70,10 @@ class EntrevistadoRepository:
             entrevistado.cidade, 
             entrevistado_id
         )
-        db = DataBase()
+        db = Database()
         return db.execute(self.QUERY_ATUALIZAR_ENTREVISTADO, parametros, many=False)
 
     def desativar(self, entrevistado_id: int):
         parametros = (entrevistado_id,)
-        db = DataBase()
+        db = Database()
         return db.execute(self.QUERY_DESATIVAR_ENTREVISTADO, parametros, many=False)

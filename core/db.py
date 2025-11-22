@@ -2,7 +2,7 @@ import psycopg2
 from core import settings
 from psycopg2.extras import RealDictCursor
 
-class DataBase:
+class Database:
     def __init__(self):
         self.db_config = {
             "host": settings.DB_HOST,

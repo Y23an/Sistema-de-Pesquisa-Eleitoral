@@ -1,4 +1,4 @@
-from core.db import DataBase
+from core.db import Database
 from modules.pesquisa.schemas import CriarPesquisaSchema, PesquisaSchema, AtualizarPesquisaSchema
 from datetime import date
 
@@ -46,7 +46,7 @@ class PesquisaRepository:
 
   def criar(self, pesquisa: CriarPesquisaSchema):
     parametros = (pesquisa.titulo, pesquisa.data_inicio, pesquisa.data_fim, pesquisa.status) 
-    db = DataBase()
+    db = Database()
     resultado = db.execute(self.QUERY_CRIAR_PESQUISA, parametros)
     return resultado
   
@@ -62,25 +62,25 @@ class PesquisaRepository:
           ativo, ativo
       )
       
-      db = DataBase()
+      db = Database()
       resultado = db.execute(self.QUERY_LISTAR_PESQUISAS, parametros)
       return resultado
   
   def listar_por_id(self, pesquisa_id: int):
     parametros = (pesquisa_id,)
-    db = DataBase()
+    db = Database()
     resultado = db.execute(self.QUERY_BUSCAR_PESQUISA_POR_ID, parametros, many=False)
     return resultado
   
   def desativar(self, pesquisa_id: int):
     parametros = (pesquisa_id,)
-    db = DataBase()
+    db = Database()
     resultado = db.execute(self.QUERY_DESATIVAR_PESQUISA, parametros, many=False)
     return resultado
   
   def atualizar(self, pesquisa_id: int, pesquisa: AtualizarPesquisaSchema):
     parametros = (pesquisa.titulo, pesquisa.data_inicio, pesquisa.data_fim, pesquisa.status, pesquisa_id)
-    db = DataBase()
+    db = Database()
     resultado = db.execute(self.QUERY_ATUALIZAR_PESQUISA, parametros, many=False)
     return resultado
 
