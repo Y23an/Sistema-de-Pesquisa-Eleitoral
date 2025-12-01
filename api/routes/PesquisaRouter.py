@@ -2,7 +2,7 @@ from typing import Optional
 from fastapi import APIRouter, Depends, status
 from modules.pesquisa import schemas
 from modules.pesquisa.service import PesquisaService
-from modules.pesquisa.schemas import CriarPesquisaSchema, AtualizarPesquisaSchema
+from modules.pesquisa.schemas import CriarPesquisaSchema, AtualizarPesquisaSchema, ResultadoPesquisaSchema, StatsPesquisaSchema
 from datetime import date
 
 router = APIRouter(prefix="/pesquisas", tags=["Pesquisas"])
@@ -31,3 +31,15 @@ def atualizar_pesquisa(pesquisa_id: int, pesquisa: schemas.AtualizarPesquisaSche
 def desativar_pesquisa(pesquisa_id: int, service: PesquisaService = Depends(get_pesquisa_service)):
     service.desativar_pesquisa(pesquisa_id)
     return
+
+@router.get("/{id}/questionario", response_model=schemas.QuestionarioSchema)
+def ver_questionario_completo(id: int, service: PesquisaService = Depends(get_pesquisa_service)):
+    return service.obter_questionario_completo(id)
+
+@router.get("/{pesquisa_id}/resultados", response_model=ResultadoPesquisaSchema)
+def ver_resultados_pesquisa(pesquisa_id: int, service: PesquisaService = Depends(get_pesquisa_service)):
+    return service.obter_resultados(pesquisa_id)
+
+@router.get("/{pesquisa_id}/stats", response_model=StatsPesquisaSchema)
+def ver_estatisticas_pesquisa(pesquisa_id: int, service: PesquisaService = Depends(get_pesquisa_service)):
+    return service.obter_stats(pesquisa_id)

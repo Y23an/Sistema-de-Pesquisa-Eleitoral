@@ -2,7 +2,7 @@ from typing import List, Optional
 from datetime import datetime
 from fastapi import APIRouter, Depends, status, Query
 from modules.resposta.service import RespostaService
-from modules.resposta.schemas import CriarRespostaSchema, RespostaSchema
+from modules.resposta.schemas import CriarRespostaSchema, RespostaSchema, ItemRespostaSchema
 
 router = APIRouter(prefix="/respostas", tags=["Respostas"])
 
@@ -25,3 +25,8 @@ def obter_resposta_por_id(resposta_id: int, service: RespostaService = Depends(g
 @router.patch("/{resposta_id}/desativar", response_model=RespostaSchema)
 def desativar_resposta(resposta_id: int, service: RespostaService = Depends(get_resposta_service)):
     return service.desativar_resposta(resposta_id)
+
+@router.post("/entrevistados/{entrevistado_id}/respostas", response_model=List[RespostaSchema], status_code=status.HTTP_201_CREATED)
+def enviar_respostas_por_entrevistado( entrevistado_id: int,  respostas: List[ItemRespostaSchema], service: RespostaService = Depends(get_resposta_service)):
+    dados_completos = CriarRespostaSchema(entrevistado_id=entrevistado_id,respostas=respostas)
+    return service.criar_resposta(dados_completos)
