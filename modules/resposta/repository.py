@@ -1,15 +1,13 @@
-from modules.resposta.schemas import CriarRespostaSchema, RespostaSchema, ItemRespostaSchema
+from modules.resposta.schemas import CriarRespostaSchema
 from core.db import Database
 from datetime import datetime
 from sqlite3 import IntegrityError
 from typing import List, Union
 
-
-
-
 class RespostaRepository:
     QUERY_CRIAR_RESPOSTA = """
-    INSERT INTO resposta (entrevistado_id, pergunta_id, alternativa_id, texto_resposta, data_resposta, ativo) VALUES (%s, %s, %s, %s, %s, TRUE)
+    INSERT INTO resposta (entrevistado_id, pergunta_id, alternativa_id, texto_resposta, data_resposta, ativo) 
+    VALUES (%s, %s, %s, %s, %s, TRUE)
     RETURNING id, entrevistado_id, pergunta_id, alternativa_id, texto_resposta, data_resposta, ativo;
     """
 
@@ -53,22 +51,13 @@ class RespostaRepository:
             ))
 
         try:
+            respostas_com_id = [] 
+
             for param in lista_para_inserir:
-                db.execute(self.QUERY_CRIAR_RESPOSTA, param, many=False)
+                resultado = db.execute(self.QUERY_CRIAR_RESPOSTA, param, many=False)
+                respostas_com_id.append(resultado)
 
-            respostas_formatadas = []
-            for item in dados.respostas:
-                respostas_formatadas.append({
-                    "entrevistado_id": dados.entrevistado_id,
-                    "pergunta_id": item.pergunta_id,
-                    "alternativa_id": item.alternativa_id,
-                    "texto_resposta": item.texto_resposta,
-                    "data_resposta": data_agora,
-                    "ativo": True 
-                    
-                })
-
-            return respostas_formatadas
+            return respostas_com_id
 
         except IntegrityError as e:
             erro_msg = str(e).lower()
@@ -109,6 +98,9 @@ class RespostaRepository:
         parametros = (resposta_id,)
         db = Database()
         return db.execute(self.QUERY_DESATIVAR_RESPOSTA, parametros, many=False)
+    
+
+
     
     
 

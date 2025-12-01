@@ -60,3 +60,21 @@ class PesquisaService:
             )
 
         return self.repository.atualizar(pesquisa_id, pesquisa)
+    
+    def obter_questionario_completo(self, pesquisa_id: int):
+        questionario = self.repository.get_questionario_completo(pesquisa_id)
+        if not questionario:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, 
+                detail=f"Pesquisa com id {pesquisa_id} não encontrada."
+            )
+            
+        return questionario
+    
+    def obter_resultados(self, pesquisa_id: int):
+        self.obter_pesquisa_por_id(pesquisa_id)
+        return self.repository.get_apuracao(pesquisa_id)
+    
+    def obter_stats(self, pesquisa_id: int):
+        self.obter_pesquisa_por_id(pesquisa_id)
+        return self.repository.get_estatisticas(pesquisa_id)
